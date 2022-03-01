@@ -12,12 +12,9 @@ library(readxl)
 data_jp <- read.table("data/16-1575-TECHAPP1.txt", header = T, sep = "\t")
 
 # Formate it
-for (x in 1:nrow(data_jp)) {
-  if (data_jp$prn.allele[x] == "ND") {
-    data_jp$prn.allele[x] = NA
-  }
-  
-}
+data_jp$prn.allele[data_jp$prn.allele == "ND"] <- NA
+data_jp$Pertactin.production[data_jp$Pertactin.production == "–"] <- "-" # Japanese "–" in the file is different from classical "-"
+data_jp$Pertactin.production[data_jp$Pertactin.production == "+"] <- "+" # Japanese "+" in the file is different from classical "+"
 
 # Create the final data frame
 data_jp <- data.frame(strain_id = data_jp$Isolate,
