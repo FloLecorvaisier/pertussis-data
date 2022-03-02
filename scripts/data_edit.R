@@ -3,6 +3,7 @@
 
 library(openxlsx)
 library(readxl)
+library(tidyr)
 
 #### Data: Hiramatsu et al., 2017 ####
 
@@ -32,20 +33,53 @@ data_jp <- data.frame(strain_id = data_jp$Isolate,
 # Export it
 write.table(data_jp, file = "data/data_jp.txt", quote = F, sep = "\t")
 
+#### Data: Otsuka et al., 2012 ####
+
+# Note that part of this strains (year >= 2005) are included in Hiramatsu et al., 2017 but with less information.
+
+# Import the XLSX data frame
+data_jp2 <- read.xlsx("https://doi.org/10.1371/journal.pone.0031985.s003", colNames = T, startRow = 2)
+
+# Clean it
+data_jp2 <- data_jp2[-(122:123), ]
+data_jp2$`Alleles.(prn/ptxA)` <- gsub("[a-zA-Z]", "", data_jp2$`Alleles.(prn/ptxA)`)
+data_jp2 <- separate(data = data_jp2, col = `Alleles.(prn/ptxA)`, into = c("prn_allele", "ptxA_allele"), sep = "/") # Separate the column with the alleles to a column with two alleles.
+for (x in c(2, 3)) {
+  data_jp2[paste0("Fim", x)] <- gsub("-", "", data_jp2[, paste0("Fim", x)])
+  data_jp2[paste0("Fim", x)] <- gsub("\\+", x, data_jp2[, paste0("Fim", x)])
+}
+data_jp2$FIM_sero <- paste0(data_jp2$Fim2, data_jp2$Fim3)
+data_jp2$FIM_sero[data_jp2$FIM_sero == ""] <- "-"
+data_jp2$FIM_sero[data_jp2$FIM_sero == "23"] <- "2,3"
+
+# Create the final data frame
+data_jp2 <- data.frame(strain_id = data_jp2$Isolate,
+                       year_isolated = data_jp2$Isolation.year,
+                       country = "Japan",
+                       region = data_jp2$`Origin.(District)`,
+                       prn = data_jp2$prn_allele,
+                       prn_def = data_jp2$Prn,
+                       ptxP = NA,
+                       ptxA = data_jp2$ptxA_allele,
+                       fim2 = NA,
+                       fim3 = NA,
+                       FIM_sero = data_jp2$FIM_sero)
+
+# Export it
+write.table(data_jp2, file = "data/data_jp2.txt", quote = F, sep = "\t")
+
 #### Data: Schmidtke et al., 2012 ####
 
 # Import the raw XLSX table
-data_us <- as.data.frame(read.xlsx("https://wwwnc.cdc.gov/eid/article/18/8/12-0082-techapp1.xlsx"))
+data_us <- read.xlsx("https://wwwnc.cdc.gov/eid/article/18/8/12-0082-techapp1.xlsx", colNames = T, startRow = 2)
 
 # Clean it
-colnames(data_us) = data_us[1, ]
-data_us = na.omit(data_us)
-data_us = data_us[-1, ]
+data_us = data_us[-662, ]
 data_us$ptxS1 = as.character(match(data_us$ptxS1, LETTERS))
 data_us$fim3 = as.character(match(gsub("\\*", "", data_us$fim3), LETTERS))
 
 # Create the final table 
-data_us <- data.frame(strain_id = data_us$`Strain Number`, 
+data_us <- data.frame(strain_id = data_us$Strain.Number, 
                       year_isolated = data_us$Year_Isolated, 
                       country = "US",
                       region = data_us$Source,
