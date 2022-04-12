@@ -1,0 +1,12 @@
+strain_id	year_isolated	country	region	prn	prn_def	ptxP	ptxA	fim2	fim3	FIM_sero	FHA_def
+B1838	1999	Netherlands	NA	NA	+	3	NA	NA	2	NA	+
+B1865	1999	Netherlands	NA	NA	+	3	NA	NA	2	NA	+
+B3405	2010	Netherlands	NA	NA	+	3	NA	NA	1	NA	+
+B3582	2009	Sweden	NA	NA	-	3	NA	NA	2	NA	-
+B3585	2009	Sweden	NA	NA	+	3	NA	NA	1	NA	-
+B3621	2008	France	NA	NA	-	3	NA	NA	2	NA	+
+B3629	2009	France	NA	NA	-	3	NA	NA	2	NA	+
+B3640	2010	Netherlands	NA	NA	-	3	NA	NA	1	NA	+
+B3658	2009	Norway	NA	NA	-	3	NA	NA	1	NA	+
+B3913	2012	Netherlands	NA	NA	+	3	NA	NA	1	NA	+
+B3921	2012	Netherlands	NA	NA	+	3	NA	NA	1	NA	+
